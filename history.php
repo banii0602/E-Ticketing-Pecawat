@@ -1,0 +1,35 @@
+<?php require 'layouts/navbar.php'; ?>
+<?php 
+
+if(!isset($_SESSION["username"])){
+    echo "
+    <script type='text/javascript'>
+        alert('Silahkan login terlebih dahulu, ya!');
+        window.location = '/e-ticketing/index.php';
+    </script>
+    ";
+}
+
+$id_user = $_SESSION["id_user"];
+$orderTiket = mysqli_query($conn, "SELECT * FROM order_tiket INNER JOIN order_detail ON order_tiket.id_order = order_detail.id_order INNER JOIN user On order_detail.id_user = user.id_user WHERE user.id_user = '$id_user' GROUP BY order_tiket.id_order");
+?>
+
+<div class="list-tiket-pesawat">
+    <h1>Riwayat Pemesanan - E Ticketing</h1>
+    <table border="1" cellcpasing="0" cellpadding="10">
+        <tr>
+            <th>No Order</th>
+            <th>Struk</th>
+            <th>Status</th>
+            <th>opsi</th>
+        </tr>
+        <?php foreach($orderTiket as $data) : ?>
+        <tr>
+            <td><?= $data["id_order"];?></td>
+            <td><?= $data["struk"];?></td>
+            <td><?= $data["status"];?></td>
+            <td><a href="detailPemesanan.php?id=<?= $data["id_order"]; ?>">Detail</a></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
